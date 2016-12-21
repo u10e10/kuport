@@ -1,0 +1,133 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'kuport'
+
+# ruby2.3 <<~DOC
+example_usage = <<USAGE
+example usage
+
+# Get messages
+$ kuport --id jx91234 -m
+
+
+# Get already read messages
+$ kuport --id jx91234 -m read
+
+
+# Login only(cache cookies)
+$ kuport --id jx91234
+
+
+# Download file manually
+$ kuport --download URL --output-file FILE
+
+
+# Download message attachment
+$ json="$(kuport --id jx91234 -m | jq '.[0].links')"
+$ kuport --download "$json"
+
+
+# Interactively download message attachment
+$ go get github.com/simeji/jid/cmd/jid
+$ kuport --download "$(kuport --id jx91234 -m | jid)"
+USAGE
+
+def debug?
+  nil != ENV['DEBUG_KUPORT']
+end
+
+require 'pry' if debug?
+
+parser = OptionParser.new do |o|
+  def o.options
+    @options ||= {}
+  end
+
+  def o.on_setopt(symbol, short, long, *desc)
+    on(short, long, *desc){|arg| options[symbol] = block_given? ? yield(arg) : arg}
+  end
+
+  # 候補からデフォルト値をセットする
+  def o.on_select(symbol, short, long, cands, *desc)
+    on_setopt(symbol, short, long, cands, cands.join(' | '), *desc){|arg| arg ? arg : cands[0]}
+  end
+
+  o.program_name= 'kuport'
+  o.version = Kuport::VERSION
+  o.banner = 'KUPORT - Get data as a JSON from Kuport'
+  o.on_head('Usage: kuport [options]')
+  # sumarry_width=32, summary_indent=' '*4,
+
+
+  o.on_setopt(:id,            '-I', '--id ID', 'Student number')
+  o.on_setopt(:download,      '-D', '--download URL|JSON', 'Download file. URL needs --output-file')
+  o.on_setopt(:output_file,   '-O', '--output-file FILE')
+  o.on_setopt(:clear_cookies, '-C', '--clear-cookies')
+  o.separator('')
+
+  o.on_select(:messages, '-m', '--messages [TYPE]', %i[default read backno],
+              "read\tAlready read messages",
+              "backno\tBack number messages(Unimplemented)")
+  o.on_select(:timetable, '-t', '--timetable [TYPE]', %i[default compact])
+  o.separator('')
+
+  o.separator('')
+  o.on_tail(example_usage)
+end
+
+ARGV << '--help' if ARGV.empty?
+parser.permute!(ARGV)
+opts= parser.options
+
+if debug?
+  warn "opts #{opts}"
+  warn "ARGV #{ARGV}"
+end
+
+# kp = KuportView.new
+kp = Kuport.new
+
+if opts[:clear_cookies]
+  kp.cookies_clear
+  exit unless opts[:id]
+end
+
+if opts[:id]
+  kp.login(opts[:id])
+end
+
+if opts[:download]
+  Kuport.quit('Need --output-file', 20) if Kuport.url?(opts[:download]) && opts[:output_file].nil?
+  kp.download(opts[:download], opts[:output_file])
+end
+
+# get data
+Kuport.quit('Please login', 32) unless kp.loggedin?
+
+
+# messages
+if opts[:messages]
+  mes = case opts[:messages]
+  when :default
+    kp.messages
+  when :raed
+    kp.messages_read
+  when :backno
+    kp.messages_backno
+  end
+
+  puts mes.to_json
+end
+
+# timetable
+if opts[:timetable]
+  table = kp.timetable
+  table.compact if opts[:timetable] == :compact
+  puts table.to_json
+end
+
+
+if debug?
+  require 'pry'
+  binding.pry
+end

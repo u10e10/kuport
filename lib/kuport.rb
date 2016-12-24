@@ -90,15 +90,16 @@ class Kuport
   end
 
   def login(id)
-    return if login_cookie
+    return true if login_cookie
     Kuport.quit('Please student id', 4) if Kuport.blank?(id)
 
     3.times do
-      return if login_passwd(id, Kuport.input_passwd)
+      return true if login_passwd(id, Kuport.input_passwd)
       warn 'Login failed'
     end
 
-    Kuport.quit('Login error', 3)
+    warn 'Login error'
+    return false
   end
 
   def messages

@@ -60,8 +60,16 @@ require 'kuport'
 kp = Kuport.new 
 kp.login('jx91234')
 
-messages = kp.messages.to_json
-timetable = kp.messages.to_json
+messages = kp.messages
+timetable = kp.timetable
+
+m = messages[0]
+puts m.title, m.body, m.links
+puts m.json
+puts messages.to_json
+
+timetable.compact
+puts timetable.to_json
 
 kp.download(url, name)
 kp.download([{name: 'File.pdf', path: 'https://example.com/file.pdf'}, ])

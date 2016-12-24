@@ -13,6 +13,8 @@ require 'kuport/helper'
 class Kuport
   extend Kuport::Helper
 
+  class DownloadError < StandardError; end
+
   # Need last slash in url
   @@base_url = 'https://kuport.sc.kogakuin.ac.jp/ActiveCampus/'.freeze
   @@base_module = 'module/'.freeze
@@ -108,7 +110,7 @@ class Kuport
   end
 
   def messages_backno
-    # TODO
+    raise NotImplementedError.new('Kuport#messages_backno') # TODO
   end
 
   def timetable
@@ -116,11 +118,13 @@ class Kuport
   end
 
   def materials
-    # TODO
+    raise NotImplementedError.new('Kuport#materials') # TODO
   end
 
   def download_file(file_path, url)
     File.write(file_path, agent.get(url).content)
+  rescue
+    DownloadError.new(file_path)
   end
 
   # url_or_json is "http://....", {name:, path:}, or [{name:, path:}, ...]
@@ -131,13 +135,15 @@ class Kuport
       return
     end
 
-    json = JSON.parse(url_or_json, {symbolize_names: true}) rescue Kuport.quit("Download Error: #{url_or_json}", 7)
-
+    json = JSON.parse(url_or_json, {symbolize_names: true})
     if Array === json
       json.each{|link| download_file(link[:name], link[:path])}
     else
       download_file(json[:name], json[:path])
     end
+
+  rescue JSON::ParserError
+    raise DownloadError.new("JSON parse error '#{url_or_json}'")
   end
 
   # html parser for Mechanize. force encode to UTF-8

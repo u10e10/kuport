@@ -2,6 +2,8 @@
 require 'optparse'
 require 'kuport'
 
+using Kuport::ClassExtensions
+
 # ruby2.3 <<~DOC
 example_usage = <<USAGE
 example usage
@@ -97,7 +99,7 @@ if opts[:id]
 end
 
 if opts[:download]
-  Kuport.quit('Need --output-file', 20) if Kuport.url?(opts[:download]) && opts[:output_file].nil?
+  Kuport.quit('Need --output-file', 20) if opts[:download].url? && opts[:output_file].nil?
   kp.download(opts[:download], opts[:output_file])
 end
 

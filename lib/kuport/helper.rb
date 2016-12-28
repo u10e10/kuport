@@ -1,13 +1,7 @@
+
+
 class Kuport
   module Helper
-    def basename_noext(path)
-      File.basename(path, File.extname(path))
-    end
-
-    def br_to_return(element)
-      element.search('br').each{|br| br.replace("\n")}
-    end
-
     def to_abs_url(base, part)
       uri = URI.parse(part)
       uri = URI.join(base, uri) if URI::Generic === uri
@@ -20,14 +14,6 @@ class Kuport
 
     def get_page_doc(page)
       Nokogiri::HTML.parse(page.content.toutf8)
-    end
-
-    def to_half_str(str)
-      NKF.nkf('-m0Z1 -w -W', str)
-    end
-
-    def url?(str)
-      str =~ /\A#{URI::regexp}\z/
     end
 
     def input_num(str)
@@ -50,9 +36,39 @@ class Kuport
       warn mes
       exit ret
     end
+  end
 
-    def blank?(var)
-      var.nil? || var.empty?
+  module ClassExtensions
+    refine Object do
+      def blank?
+        true
+      end
+    end
+
+    refine String do
+      def to_half_str
+        NKF.nkf('-m0Z1 -w -W', self)
+      end
+
+      def url?
+        self =~ /\A#{URI::regexp}\z/
+      end
+
+      def blank?
+        self.empty?
+      end
+    end
+
+    refine Nokogiri::XML::Node do
+      def br_to_return
+        self.search('br').each{|br| br.replace("\n")}
+      end
+    end
+
+    refine File do
+      def self.basename_noext(path)
+        File.basename(path, File.extname(path))
+      end
     end
   end
 end

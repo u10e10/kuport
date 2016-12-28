@@ -1,4 +1,5 @@
 class Kuport::Timetable
+  using Kuport::ClassExtensions
   attr_reader :year, :dates, :table, :special
 
   def initialize(doc)
@@ -15,7 +16,7 @@ class Kuport::Timetable
   end
 
   def parse_dates(dates_doc)
-    Kuport.br_to_return(dates_doc)
+    dates_doc.br_to_return
     tds = dates_doc.css('td')
     @year = tds.shift.text
 
@@ -34,11 +35,11 @@ class Kuport::Timetable
       tds.shift # 横枠破棄(1~7時限 集中講義等)
 
       tds.zip(@table).each do |(td, day)| # 各曜日のn限
-        Kuport.br_to_return(td)
+        td.br_to_return
         name,room,period = parse_class_text(td.text)
 
         # 休講とか (kyuko)
-        status = td.css('img').map{|img| Kuport.basename_noext(img['src'])}
+        status = td.css('img').map{|img| File.basename_noext(img['src'])}
         day[1] << {name: name, room: room, period: period, status: status}
       end
     end
@@ -47,7 +48,7 @@ class Kuport::Timetable
   def parse_class_text(text)
     text.strip!
     text = '' if text == '-'
-    text = Kuport.to_half_str(text)
+    text = text.to_half_str
 
     name,room,period = text.split("\n")
     name.sub!(/\[(.+)\]/, '\1') if name

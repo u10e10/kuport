@@ -1,4 +1,5 @@
 class Kuport::Message
+  using Kuport::ClassExtensions
   attr_reader :agent, :base_url, :title, :body, :links
 
   # return [Message,...]

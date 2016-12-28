@@ -12,6 +12,7 @@ require 'kuport/helper'
 
 class Kuport
   extend Kuport::Helper
+  using Kuport::ClassExtensions
 
   class DownloadError < StandardError; end
 
@@ -91,7 +92,7 @@ class Kuport
 
   def login(id)
     return true if login_cookie
-    Kuport.quit('Please student id', 4) if Kuport.blank?(id)
+    Kuport.quit('Please student id', 4) if id.blank?
 
     3.times do
       return true if login_passwd(id, Kuport.input_passwd)
@@ -131,7 +132,7 @@ class Kuport
   # url_or_json is "http://....", {name:, path:}, or [{name:, path:}, ...]
   # If url_or_json is URL, need file_path
   def download(url_or_json, file_path=nil)
-    if Kuport.url?(url_or_json)
+    if url_or_json.url?
       download_file(file_path, url_or_json)
       return
     end

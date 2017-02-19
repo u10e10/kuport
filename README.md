@@ -4,7 +4,7 @@
 
 ## Installation
 
-```shell
+```bash
 $ gem install kuport
 ```
 
@@ -14,7 +14,7 @@ $ gem install kuport
 
 端末でjsonを読むには`jid`がおすすめ。   
 
-``` 
+```bash 
 $ go get github.com/simeji/jid/cmd/jid
 $ cat sample.json | jid
 ```
@@ -24,7 +24,7 @@ $ cat sample.json | jid
 一度ログインすればキャッシュが効くので、暫くは`--id`とパスワード入力は不要。  
 
 
-```shell 
+```bash 
 # 個人宛メッセージ取得
 $ kuport --id jx91234 -m
 

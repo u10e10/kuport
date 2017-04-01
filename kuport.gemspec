@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Kuport scraping library and command}
   spec.description   = spec.summary
-  spec.homepage      = 'https://github.com/u10e10/kuport'
+  spec.homepage      = 'https://github.com/uplus/kuport'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

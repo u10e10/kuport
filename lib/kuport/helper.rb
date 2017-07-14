@@ -1,4 +1,4 @@
-
+require 'uri'
 require 'nkf'
 require 'io/console'
 
@@ -37,6 +37,18 @@ class Kuport
     def quit(mes, ret=false)
       warn mes
       exit ret
+    end
+
+    def get_proxy_env_var
+      keys = %w[ http_proxy https_proxy all_proxy ].map{|s| [s, s.upcase]}.flatten
+      keys.each do |key|
+        return ENV[key] if ENV.key?(key)
+      end
+      return nil
+    end
+
+    def parse_proxy_str(str)
+      str.split(':')[0..1]
     end
   end
 

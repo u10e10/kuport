@@ -33,9 +33,14 @@ class Kuport
   @@cookies_file = File.join(@@cache_dir, 'cookies.jar')
   FileUtils.mkdir_p(@@cache_dir)
 
-  def initialize
+  def initialize(proxy: nil)
     agent.html_parser = self.class
     cookies_load
+
+    proxy ||= Kuport.get_proxy_env_var
+    if proxy
+      agent.set_proxy(*Kuport.parse_proxy_str(proxy))
+    end
   end
 
   def agent

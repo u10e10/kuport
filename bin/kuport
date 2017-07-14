@@ -65,6 +65,7 @@ parser = OptionParser.new do |o|
   o.on_setopt(:download,      '-D', '--download URL|JSON', 'Download file. URL needs --output-file')
   o.on_setopt(:output_file,   '-O', '--output-file FILE')
   o.on_setopt(:clear_cookies, '-C', '--clear-cookies')
+  o.on_setopt(:proxy,         '-P', '--proxy SERVER:PORT')
   o.separator('')
 
   o.on_select(:messages, '-m', '--messages [TYPE]', %i[default read backno],
@@ -87,7 +88,7 @@ if debug?
 end
 
 # kp = KuportView.new
-kp = Kuport.new
+kp = Kuport.new(proxy: opts[:proxy])
 
 if opts[:clear_cookies]
   kp.cookies_clear

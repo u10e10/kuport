@@ -1,4 +1,6 @@
 
+require 'nkf'
+require 'io/console'
 
 class Kuport
   module Helper

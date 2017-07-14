@@ -3,8 +3,6 @@ require 'nokogiri'
 require 'open-uri'
 require 'fileutils'
 require 'json'
-require 'io/console'
-require 'nkf'
 
 require 'kuport/helper'
 
@@ -35,12 +33,13 @@ class Kuport
   @@cookies_file = File.join(@@cache_dir, 'cookies.jar')
   FileUtils.mkdir_p(@@cache_dir)
 
-  attr_reader :agent
-
   def initialize
-    @agent = Mechanize.new
-    @agent.html_parser = self.class
+    agent.html_parser = self.class
     cookies_load
+  end
+
+  def agent
+    @agent ||= Mechanize.new
   end
 
   def self.module_url(*parts)

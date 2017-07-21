@@ -51,7 +51,7 @@ parser = OptionParser.new do |o|
 
   # 候補からデフォルト値をセットする
   def o.on_select(symbol, short, long, cands, *desc)
-    on_setopt(symbol, short, long, cands, cands.join(' | '), *desc){|arg| arg ? arg : cands[0]}
+    on_setopt(symbol, short, long, cands, cands.join(' | '), *desc){|arg| arg || cands[0]}
   end
 
   o.program_name= 'kuport'

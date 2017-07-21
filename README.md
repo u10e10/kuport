@@ -60,7 +60,7 @@ kuport --materials | jq 'map(select( .["subject"] | test("^線形代数") ).link
 
 ```
 
-###Library
+### Library
 ```ruby 
 require 'kuport'
 kp = Kuport.new
@@ -86,11 +86,11 @@ kp.download([{name: 'File.pdf', path: 'https://example.com/file.pdf'}, ])
 kp.cookies_clear
 ```
 
-##Formats
+## Formats
 
-###message
+### message
 
-```json 
+```
 [
   {
     "title": "おしらせ その1",
@@ -116,7 +116,7 @@ kp.cookies_clear
 ```
 
 
-###timetable 
+### timetable
 
 | 要素    | 中身                     |
 |---------|--------------------------|
@@ -126,7 +126,7 @@ kp.cookies_clear
 | special | 集中講義など             |
 
 
-```json 
+```
 {
   "year": "2022年",
   "dates": [
@@ -134,22 +134,9 @@ kp.cookies_clear
       "date": "12月19日 月",
       "special": null
     },
-    {
-      "date": "12月20日 火",
-      "special": null
-    },
-    {
-      "date": "12月21日 水",
-      "special": null
-    },
-    {
-      "date": "12月22日 木",
-      "special": null
-    },
-    {
-      "date": "12月23日 金",
-      "special": "天皇誕生日"
-    },
+    .
+    .
+    .
     {
       "date": "12月24日 土",
       "special": null
@@ -169,30 +156,9 @@ kp.cookies_clear
         "period": null,
         "status": []
       },
-      {
-        "name": "English",
-        "room": "13-8",
-        "period": "Q2",
-        "status": []
-      },
-      {
-        "name": null,
-        "room": null,
-        "period": null,
-        "status": []
-      },
-      {
-        "name": "IT",
-        "room": "QA",
-        "period": null,
-        "status": []
-      },
-      {
-        "name": null,
-        "room": null,
-        "period": null,
-        "status": []
-      },
+      .
+      .
+      .
       {
         "name": null,
         "room": null,
@@ -211,7 +177,6 @@ kp.cookies_clear
 
 ```
 
-###download 
 ### materials
 
 ```
@@ -237,6 +202,8 @@ kp.cookies_clear
   .
 ]
 ```
+
+### download
 
 | 形式       | 説明          | 例                                                               |
 |------------|---------------|------------------------------------------------------------------|

@@ -10,7 +10,7 @@ $ gem install kuport
 
 ## Usage
 
-###Command
+### Command
 
 端末でjsonを読むには`jid`がおすすめ。   
 
@@ -23,41 +23,47 @@ $ cat sample.json | jid
 
 一度ログインすればキャッシュが効くので、暫くは`--id`とパスワード入力は不要。  
 
+`--download`で複数のファイルを一括で落とすにはjqなどで上手くフィルタして`name`と`path`を含むディクショナリのリストを取り出す必要がある。  
+`[{name: 'Name', path: 'https://~~'}, ...]`  
 
 ```bash 
 # 個人宛メッセージ取得
-$ kuport --id jx91234 -m
+kuport --id jx91234 -m
 
 
 # 個人宛メッセージ(既読)取得
-$ kuport --id jx91234 -m read
+kuport --id jx91234 -m read
 
 
 # ログインのみ(一度ログインするとCookieがキャッシュされる)
-$ kuport --id jx91234
+kuport --id jx91234
 
 
-# キューポートからファイルをダウンロード
-$ kuport --download URL --output-file FILE
+# キューポートからファイルを1つダウンロード
+kuport --download URL --output-file FILE
 
 
 # メッセージの添付ファイルをまとめてダウンロード(jqでjsonパース)
-$ json="$(kuport --id jx91234 -m | jq '.[0].links')"
-$ kuport --download "$json"
+kuport --id jx91234 -m | jq '.[0].links' | kuport --download
 
 
 # 動的にダウンロードするファイルを選択
-$ kuport --download "$(kuport --id jx91234 -m | jid)"
+kuport --id jx91234 -m | jid | kuport --download
 
 
 # 時間割取得
-$ kuport -t
+kuport -t
+
+
+# 電子教材の特定の科目をダウンロード
+kuport --materials | jq 'map(select( .["subject"] | test("^線形代数") ).links | .[])' | kuport --download
+
 ```
 
 ###Library
 ```ruby 
-require 'kuport' 
-kp = Kuport.new 
+require 'kuport'
+kp = Kuport.new
 kp.login('jx91234')
 
 messages = kp.messages
@@ -211,11 +217,10 @@ kp.cookies_clear
 | JSON(配列) | 複数の要素    | [{"name": "img.png", "path": "http://example.com/efg.png"}, ...] |  
 
 
-
 ## Contributing
 
 バグがあったらお気軽にどうぞ。  
-コントリビューター募集中。   
+コントリビューター募集中。  
 
 
 ## License

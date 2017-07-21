@@ -124,7 +124,7 @@ class Kuport
   end
 
   def materials
-    raise NotImplementedError.new('Kuport#materials') # TODO
+    @materials ||= Materials.new(get_module(:materials))
   end
 
   def download_file(file_path, url)
@@ -163,5 +163,6 @@ end
 
 require 'kuport/message'
 require 'kuport/timetable'
+require 'kuport/materials'
 require 'kuport/view'
 require 'kuport/version'

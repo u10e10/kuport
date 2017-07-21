@@ -68,6 +68,7 @@ kp.login('jx91234')
 
 messages = kp.messages
 timetable = kp.timetable
+materials = kp.materials
 
 m = messages[0]
 puts m.title, m.body, m.links
@@ -76,6 +77,8 @@ puts messages.to_json
 
 timetable.compact
 puts timetable.to_json
+
+puts materials.to_json
 
 kp.download(url, name)
 kp.download([{name: 'File.pdf', path: 'https://example.com/file.pdf'}, ])
@@ -209,6 +212,31 @@ kp.cookies_clear
 ```
 
 ###download 
+### materials
+
+```
+[
+  {
+    "subject": "世界一スゴイ講義",
+    "teacher": "スゴイ先生",
+    "title": "第100回目資料",
+    "period": "2117/04/04 〜 2117/08/20",
+    "state": "未ダウンロード",
+    "links": [
+      {
+        "name": "講義資料.pdf",
+        "path": "http://example.com/abc.pdf"
+      }
+      .
+      .
+      .
+    ]
+  },
+  .
+  .
+  .
+]
+```
 
 | 形式       | 説明          | 例                                                               |
 |------------|---------------|------------------------------------------------------------------|

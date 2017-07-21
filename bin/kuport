@@ -32,6 +32,9 @@ $ kuport --download "$json"
 # Interactively download message attachment
 $ go get github.com/simeji/jid/cmd/jid
 $ kuport --download "$(kuport --id jx91234 -m | jid)"
+
+# Download specific subjects materials
+kuport --materials | jq 'map(select( .["subject"] | test("^Computer") ).links | .[])' | kuport --download
 USAGE
 
 def debug?
@@ -76,6 +79,7 @@ parser = OptionParser.new do |o|
               "read\tAlready read messages",
               "backno\tBack number messages(Unimplemented)")
   o.on_select(:timetable, '-t', '--timetable [TYPE]', %i[default compact])
+  o.on_select(:materials, '-d', '--materials [TYPE]', %i[default])
   o.separator('')
 
   o.separator('')
@@ -134,6 +138,11 @@ if opts[:timetable]
   puts table.to_json
 end
 
+# materials
+if opts[:materials]
+  mat = kp.materials
+  puts mat.to_json
+end
 
 if debug?
   require 'pry'

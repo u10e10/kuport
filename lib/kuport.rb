@@ -143,7 +143,10 @@ class Kuport
 
     json = JSON.parse(url_or_json, {symbolize_names: true})
     if Array === json
-      json.each{|link| download_file(link[:name], link[:path])}
+      json.each do |link|
+        download_file(link[:name], link[:path])
+        puts link[:name]
+      end
     else
       download_file(json[:name], json[:path])
     end

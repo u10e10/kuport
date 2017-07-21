@@ -10,6 +10,10 @@ class Kuport
       uri.to_s
     end
 
+    def escape_filename(filename)
+      File.basename(filename.strip)
+    end
+
     def color_str(color_num, str)
       "\e[38;5;#{color_num}m#{str}\e[00m"
     end

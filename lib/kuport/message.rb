@@ -50,7 +50,8 @@ class Kuport::Message
   end
 
   def parse_link(elem)
-    {name: elem.text, path: Kuport.to_abs_url(base_url, elem[:href])}.freeze
+    {name: Kuport.escape_filename(elem.text),
+     path: Kuport.to_abs_url(base_url, elem[:href])}.freeze
   end
 
   def to_h

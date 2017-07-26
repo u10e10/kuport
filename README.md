@@ -14,7 +14,7 @@ $ gem install kuport
 
 端末でjsonを読むには`jid`がおすすめ。   
 
-```bash 
+```bash
 $ go get github.com/simeji/jid/cmd/jid
 $ cat sample.json | jid
 ```
@@ -26,7 +26,7 @@ $ cat sample.json | jid
 `--download`で複数のファイルを一括で落とすにはjqなどで上手くフィルタして`name`と`path`を含むディクショナリのリストを取り出す必要がある。  
 `[{name: 'Name', path: 'https://~~'}, ...]`  
 
-```bash 
+```bash
 # 個人宛メッセージ取得
 kuport --id jx91234 -m
 
@@ -231,4 +231,3 @@ kp.cookies_clear
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

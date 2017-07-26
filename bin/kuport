@@ -35,7 +35,7 @@ $ go get github.com/simeji/jid/cmd/jid
 $ kuport --download "$(kuport --id jx91234 -m | jid)"
 
 # Download specific subjects materials
-kuport --materials | jq 'map(select( .["subject"] | test("^Computer") ).links | .[])' | kuport --download
+kuport --materials | kuport --filter='subject:Computer' | jq 'map(.links | .[])' | kuport --download
 USAGE
 
 def debug?
@@ -76,6 +76,7 @@ parser = OptionParser.new do |o|
 
 
   o.on_setopt(:id,            '-I', '--id=ID', 'Student number')
+  o.on_setopt(:filter,        '-F', '--filter=KEY:PATTERN', 'Filter JSON contents')
   o.on_setopt(:download,      '-D', '--download=[-|URL|JSON]',
               'Download file.',
               'URL need --output-file',
@@ -123,6 +124,11 @@ if opts[:download]
   Kuport.quit('Need --output-file', 20) if opts[:download].url? && opts[:output_file].nil?
   opts[:download] = STDIN.read if opts[:download] == '-'
   kp.download(opts[:download], opts[:output_file])
+end
+
+if opts[:filter]
+  key,pattern = opts[:filter].split(':', 2)
+  putj Kuport.filter(key, pattern)
 end
 
 # get data

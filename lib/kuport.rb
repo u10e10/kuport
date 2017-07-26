@@ -155,6 +155,11 @@ class Kuport
     raise DownloadError.new("JSON parse error '#{url_or_json}'")
   end
 
+  # return Hash
+  def self.filter(key, pattern)
+    JSON.load(STDIN.read).select{|m| m[key].to_s.match?(pattern)}
+  end
+
   # html parser for Mechanize. force encode to UTF-8
   def self.parse(text, url = nil, encoding = nil, options = Nokogiri::XML::ParseOptions::DEFAULT_HTML, &block)
     Nokogiri::HTML::Document.parse(text.toutf8, url, 'UTF-8', options, &block)

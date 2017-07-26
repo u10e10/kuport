@@ -55,8 +55,8 @@ kuport --id jx91234 -m | jid | kuport --download
 kuport -t
 
 
-kuport --materials | jq 'map(select( .["subject"] | test("^線形代数") ).links | .[])' | kuport --download
 # 電子教材から科目指定でダウンロード
+kuport --materials | kuport --filter='subject:線形代数' | jq 'map(.links | .[])' | kuport --download
 
 ```
 

@@ -64,22 +64,22 @@ parser = OptionParser.new do |o|
   # sumarry_width=32, summary_indent=' '*4,
 
 
-  o.on_setopt(:id,            '-I', '--id ID', 'Student number')
+  o.on_setopt(:id,            '-I', '--id=ID', 'Student number')
   o.on_setopt(:download,      '-D', '--download=[-|URL|JSON]',
               'Download file.',
               'URL need --output-file',
               'JSON contain [{name: "FILE", path: "URL"}, ...]',
               "'-' read URL|JSON from stdin"){|v| v || '-'}
-  o.on_setopt(:output_file,   '-O', '--output-file FILE', 'Specify destination filename')
+  o.on_setopt(:output_file,   '-O', '--output-file=FILE', 'Specify destination filename')
   o.on_setopt(:clear_cookies, '-C', '--clear-cookies')
-  o.on_setopt(:proxy,         '-P', '--proxy SERVER:PORT')
+  o.on_setopt(:proxy,         '-P', '--proxy=SERVER:PORT')
   o.separator('')
 
-  o.on_select(:messages, '-m', '--messages [TYPE]', %i[default read backno],
+  o.on_select(:messages, '-m', '--messages=[TYPE]', %i[default read backno],
               "read\tAlready read messages",
               "backno\tBack number messages(Unimplemented)")
-  o.on_select(:timetable, '-t', '--timetable [TYPE]', %i[default compact])
   o.on_select(:materials, '-d', '--materials [TYPE]', %i[default])
+  o.on_select(:timetable, '-t', '--timetable=[TYPE]', %i[default compact])
   o.separator('')
 
   o.separator('')

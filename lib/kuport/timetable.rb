@@ -83,7 +83,7 @@ class Kuport::Timetable
     @data_str = to_h.to_s
   end
 
-  def to_json
-    @data_json ||= to_h.to_json
+  def to_json(*a)
+    @data_json ||= to_h.to_json(*a)
   end
 end

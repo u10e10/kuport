@@ -1,4 +1,3 @@
-require 'pry'
 class Kuport::Materials
   using Kuport::ClassExtensions
   attr_reader :trs, :base_url

@@ -52,7 +52,9 @@ class Kuport
     end
 
     def parse_proxy_str(str)
-      str.split(':')[0..1]
+      str = 'http://' + str if str !~ /\A\w+:\/\//
+      u = URI.parse(str)
+      [u.host, u.port]
     end
   end
 

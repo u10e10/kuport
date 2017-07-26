@@ -78,7 +78,7 @@ parser = OptionParser.new do |o|
   o.on_select(:messages, '-m', '--messages=[TYPE]', %i[default read backno],
               "read\tAlready read messages",
               "backno\tBack number messages(Unimplemented)")
-  o.on_select(:materials, '-d', '--materials [TYPE]', %i[default])
+  o.on_setopt(:materials, '-d', '--materials')
   o.on_select(:timetable, '-t', '--timetable=[TYPE]', %i[default compact])
   o.separator('')
 

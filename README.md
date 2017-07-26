@@ -86,6 +86,16 @@ kp.download([{name: 'File.pdf', path: 'https://example.com/file.pdf'}, ])
 kp.cookies_clear
 ```
 
+## Configure file
+
+~/.kuportrc.json
+
+```json
+{
+  "id": "jx91234"
+}
+```
+
 ## Formats
 
 ### message

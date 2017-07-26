@@ -45,6 +45,7 @@ end
 require 'pry' if debug?
 
 $kuport_human_readable = STDOUT.tty?
+RC_FILE = File.expand_path('~/.kuportrc.json')
 
 def putj(obj)
   if $kuport_human_readable
@@ -100,7 +101,14 @@ end
 
 ARGV << '--help' if ARGV.empty?
 parser.permute!(ARGV)
-opts= parser.options
+opts = parser.options
+
+# read config
+config = {}
+if File.readable?(RC_FILE)
+  config = JSON.parse(File.read(RC_FILE), {symbolize_names: true})
+end
+config.each{|k,v| opts[k] = config[k] unless opts.has_key?(k)}
 
 if debug?
   warn "opts #{opts}"

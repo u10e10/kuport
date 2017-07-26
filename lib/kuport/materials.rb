@@ -18,7 +18,7 @@ class Kuport::Materials
      teacher: tds[2].text,
      title:   tds[3].text,
      period:  tds[4].text,
-     state:   tds[5].text,
+     downloaded: (tds[5].text == 'ダウンロード済み'),
      links:   tds[6].css('li').map{|li| parse_link(li)},}.freeze
   end
 

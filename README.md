@@ -55,13 +55,13 @@ kuport --id jx91234 -m | jid | kuport --download
 kuport -t
 
 
-# 電子教材の特定の科目をダウンロード
 kuport --materials | jq 'map(select( .["subject"] | test("^線形代数") ).links | .[])' | kuport --download
+# 電子教材から科目指定でダウンロード
 
 ```
 
 ### Library
-```ruby 
+```ruby
 require 'kuport'
 kp = Kuport.new
 kp.login('jx91234')
@@ -179,6 +179,16 @@ kp.cookies_clear
 
 ### materials
 
+| キー       | 値                               |
+|------------|----------------------------------|
+| subject    | String 科目名                    |
+| teacher    | String 教員名                    |
+| title      | String 資料タイトル              |
+| period     | String 公開期間                  |
+| downloaded | Boolean ダウンロード状態         |
+| links      | [{name, path}, ...] ファイル一覧 |
+
+
 ```
 [
   {
@@ -186,7 +196,7 @@ kp.cookies_clear
     "teacher": "スゴイ先生",
     "title": "第100回目資料",
     "period": "2117/04/04 〜 2117/08/20",
-    "state": "未ダウンロード",
+    "downloaded": true,
     "links": [
       {
         "name": "講義資料.pdf",

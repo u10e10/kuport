@@ -139,7 +139,7 @@ if opts[:timetable]
 end
 
 # materials
-if opts[:materials]
+if opts.has_key?(:materials)
   mat = kp.materials
   puts mat.to_json
 end

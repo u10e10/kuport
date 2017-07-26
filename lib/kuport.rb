@@ -133,15 +133,9 @@ class Kuport
     DownloadError.new(file_path)
   end
 
-  # url_or_json is "http://....", {name:, path:}, or [{name:, path:}, ...]
-  # If url_or_json is URL, need file_path
-  def download(url_or_json, file_path=nil)
-    if url_or_json.url?
-      download_file(file_path, url_or_json)
-      return
-    end
-
-    json = JSON.parse(url_or_json, {symbolize_names: true})
+  # json is {name:, path:} or [{name:, path:}, ...]
+  def download(json_str)
+    json = JSON.parse(json_str, {symbolize_names: true})
     if Array === json
       json.each do |link|
         download_file(link[:name], link[:path])
@@ -152,7 +146,7 @@ class Kuport
     end
 
   rescue JSON::ParserError
-    raise DownloadError.new("JSON parse error '#{url_or_json}'")
+    raise DownloadError.new("JSON parse error '#{json}'")
   end
 
   # return Hash

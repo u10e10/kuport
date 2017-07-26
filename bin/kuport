@@ -22,7 +22,7 @@ $ kuport --id=jx91234
 
 
 # Download file manually
-$ kuport --download URL --output-file FILE
+$ kuport --download=NAME:URL
 
 
 # Download message attachment
@@ -77,12 +77,11 @@ parser = OptionParser.new do |o|
 
   o.on_setopt(:id,            '-I', '--id=ID', 'Student number')
   o.on_setopt(:filter,        '-F', '--filter=KEY:PATTERN', 'Filter JSON contents')
-  o.on_setopt(:download,      '-D', '--download=[-|URL|JSON]',
+  o.on_setopt(:download,      '-D', '--download=[-|NAME:URL|JSON]',
               'Download file.',
-              'URL need --output-file',
+              'Download URL file as NAME',
               'JSON contain [{name: "FILE", path: "URL"}, ...]',
-              "'-' read URL|JSON from stdin"){|v| v || '-'}
-  o.on_setopt(:output_file,   '-O', '--output-file=FILE', 'Specify destination filename')
+              "'-' read NAME:URL or JSON from stdin"){|v| v || '-'}
   o.on_setopt(:clear_cookies, '-C', '--clear-cookies')
   o.on_setopt(:proxy,         '-P', '--proxy=SERVER:PORT')
   o.on_setopt(:human_readable,'-H', '--[no-]human-readable'){|v| $kuport_human_readable = v}
@@ -121,9 +120,16 @@ if opts[:id]
 end
 
 if opts[:download]
-  Kuport.quit('Need --output-file', 20) if opts[:download].url? && opts[:output_file].nil?
   opts[:download] = STDIN.read if opts[:download] == '-'
-  kp.download(opts[:download], opts[:output_file])
+
+  name,url = opts[:download].split(':', 2)
+  if url.url?
+    # NAME:URL
+    kp.download_file(name, url)
+  else
+    # JSON
+    kp.download(opts[:download])
+  end
 end
 
 if opts[:filter]

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'kuport'
+require 'json'
 
 using Kuport::ClassExtensions
 
@@ -43,6 +44,16 @@ end
 
 require 'pry' if debug?
 
+$kuport_human_readable = STDOUT.tty?
+
+def putj(obj)
+  if $kuport_human_readable
+    puts JSON.pretty_generate(obj)
+  else
+    puts obj.to_json
+  end
+end
+
 parser = OptionParser.new do |o|
   def o.options
     @options ||= {}
@@ -73,6 +84,7 @@ parser = OptionParser.new do |o|
   o.on_setopt(:output_file,   '-O', '--output-file=FILE', 'Specify destination filename')
   o.on_setopt(:clear_cookies, '-C', '--clear-cookies')
   o.on_setopt(:proxy,         '-P', '--proxy=SERVER:PORT')
+  o.on_setopt(:human_readable,'-H', '--[no-]human-readable'){|v| $kuport_human_readable = v}
   o.separator('')
 
   o.on_select(:messages, '-m', '--messages=[TYPE]', %i[default read backno],
@@ -128,20 +140,20 @@ if opts[:messages]
     kp.messages_backno
   end
 
-  puts mes.to_json
+  putj mes
 end
 
 # timetable
 if opts[:timetable]
   table = kp.timetable
   table.compact if opts[:timetable] == :compact
-  puts table.to_json
+  putj table
 end
 
 # materials
 if opts.has_key?(:materials)
   mat = kp.materials
-  puts mat.to_json
+  putj mat
 end
 
 if debug?

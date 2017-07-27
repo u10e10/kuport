@@ -123,6 +123,12 @@ if opts[:clear_cookies]
   exit unless opts[:id]
 end
 
+if opts[:filter]
+  key,pattern = opts[:filter].split(':', 2)
+  putj Kuport.filter(key, pattern)
+  exit
+end
+
 if opts[:id]
   kp.login(opts[:id])
 end
@@ -138,11 +144,6 @@ if opts[:download]
     # JSON
     kp.download(opts[:download])
   end
-end
-
-if opts[:filter]
-  key,pattern = opts[:filter].split(':', 2)
-  putj Kuport.filter(key, pattern)
 end
 
 # get data

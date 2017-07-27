@@ -12,20 +12,6 @@ $ gem install kuport
 
 ### Command
 
-端末でjsonを読むには`jid`がおすすめ。   
-
-```bash
-$ go get github.com/simeji/jid/cmd/jid
-$ cat sample.json | jid
-```
-
-決め打ちで処理するなら`jq`などを使用。  
-
-一度ログインすればキャッシュが効くので、暫くは`--id`とパスワード入力は不要。  
-
-`--download`で複数のファイルを一括で落とすにはjqなどで上手くフィルタして`name`と`path`を含むディクショナリのリストを取り出す必要がある。  
-`[{name: 'Name', path: 'https://~~'}, ...]`  
-
 ```bash
 # 個人宛メッセージ取得
 kuport --id jx91234 -m
@@ -39,12 +25,12 @@ kuport --id jx91234 -m read
 kuport --id jx91234
 
 
-# キューポートからファイルを1つダウンロード
-kuport --download URL --output-file FILE
+# URLをダウンロードしてNAMEとして保存
+kuport --download NAME:URL
 
 
-# メッセージの添付ファイルをまとめてダウンロード(jqでjsonパース)
-kuport --id jx91234 -m | jq '.[0].links' | kuport --download
+# メッセージの添付ファイルをまとめてダウンロード
+kuport --id jx91234 -m | kuport --download
 
 
 # 動的にダウンロードするファイルを選択
@@ -56,9 +42,27 @@ kuport -t
 
 
 # 電子教材から科目指定でダウンロード
-kuport --materials | kuport --filter='subject:線形代数' | jq 'map(.links | .[])' | kuport --download
+kuport --materials | kuport --filter='subject:線形代数' | kuport --download
 
 ```
+
+一度ログインすればキャッシュが効くので、しばらくは`--id`とパスワード入力は不要。  
+
+`--download`はJSONから`name`と`path`を持つ辞書を再帰的に探索してダウロードできる。  
+`[{name: 'Name', path: 'https://~~'}, ...]`  
+
+
+端末でjsonを読むには`jid`がおすすめ。  
+
+```bash
+$ go get github.com/simeji/jid/cmd/jid
+$ cat sample.json | jid
+```
+
+プロキシの設定は環境変数`HTTP_PROXY`, `HTTPS_PROXY`,`ALL_PROXY`から読み込む。  
+`--proxy`でも設定可能。  
+
+
 
 ### Library
 ```ruby
@@ -80,8 +84,8 @@ puts timetable.to_json
 
 puts materials.to_json
 
-kp.download(url, name)
-kp.download([{name: 'File.pdf', path: 'https://example.com/file.pdf'}, ])
+kp.download(name, url)
+kp.download_with_json("[{name: 'File.pdf', path: 'https://example.com/file.pdf'}]")
 
 kp.cookies_clear
 ```
@@ -112,7 +116,7 @@ kp.cookies_clear
       },
       {
         "name": "画像.png",
-        "path": "https://example.com/img/image1.pdf"
+        "path": "https://example.com/img/image1.png"
       }
     ]
   },
@@ -225,17 +229,10 @@ kp.cookies_clear
 
 ### download
 
-| 形式       | 説明          | 例                                                               |
-|------------|---------------|------------------------------------------------------------------|
-| URL        | ファイルのURL | "http://example.com/file.pdf"                                    |
-| JSON       | 単一の要素    | {"name": "file.pdf", "path": "http://example.com/abc.pdf"}       |
-| JSON(配列) | 複数の要素    | [{"name": "img.png", "path": "http://example.com/efg.png"}, ...] |  
-
-
-## Contributing
-
-バグがあったらお気軽にどうぞ。  
-コントリビューター募集中。  
+| 形式     | 説明                         | 例                                                        |
+|----------|------------------------------|-----------------------------------------------------------|
+| NAME:URL | URLをNAMEとして保存          | file.pdf:"http://example.com/file.pdf"                    |
+| JSON     | pathをnameとして保存(再帰的) | {"name": "abc.pdf", "path": "http://example.com/abc.pdf"} |
 
 
 ## License

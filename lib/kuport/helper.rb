@@ -56,6 +56,10 @@ class Kuport
       u = URI.parse(str)
       [u.host, u.port]
     end
+
+    def clear_proxy_env_var
+      ENV.delete_if{|k,v| k =~ /_proxy/i }
+    end
   end
 
   module ClassExtensions

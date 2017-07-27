@@ -33,12 +33,16 @@ class Kuport
   @@cookies_file = File.join(@@cache_dir, 'cookies.jar')
   FileUtils.mkdir_p(@@cache_dir)
 
-  def initialize(proxy: nil)
+  def initialize(**opts)
     agent.html_parser = self.class
     cookies_load
 
-    proxy ||= Kuport.get_proxy_env_var
-    if proxy
+    # If proxy is blank, don't use proxy
+    proxy = opts.key?(:proxy) ? opts[:proxy] : Kuport.get_proxy_env_var
+
+    if proxy.blank?
+      Kuport.clear_proxy_env_var
+    else
       agent.set_proxy(*Kuport.parse_proxy_str(proxy))
     end
   end

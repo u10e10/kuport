@@ -116,7 +116,7 @@ if debug?
 end
 
 # kp = KuportView.new
-kp = Kuport.new(proxy: opts[:proxy])
+kp = Kuport.new(opts)
 
 if opts[:clear_cookies]
   kp.cookies_clear

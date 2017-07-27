@@ -142,7 +142,7 @@ if opts[:download]
     kp.download_file(name, url)
   else
     # JSON
-    kp.download(opts[:download])
+    kp.download_with_json(opts[:download])
   end
 end
 

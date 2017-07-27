@@ -134,19 +134,33 @@ class Kuport
   end
 
   # json is {name:, path:} or [{name:, path:}, ...]
-  def download(json_str)
-    json = JSON.parse(json_str, {symbolize_names: true})
-    if Array === json
-      json.each do |link|
-        download_file(link[:name], link[:path])
-        puts link[:name]
-      end
-    else
-      download_file(json[:name], json[:path])
+  def download_with_json(json_str)
+    h = JSON.parse(json_str, {symbolize_names: true})
+    find_links(h).each do |h|
+      download_file(h[:name], h[:path])
+      puts h[:name]
     end
 
   rescue JSON::ParserError
     raise DownloadError.new("JSON parse error '#{json}'")
+  end
+
+  # Takeout pair of :name and ;path recursively
+  def find_links(j)
+    links = []
+
+    if j.is_a?(Array)
+      j.each{|v| links.push(*find_links(v))}
+    elsif j.is_a?(Hash)
+      link = j.take_with_keys(:name, :path)
+      links.push(link) if link
+
+      j.each do |_,v|
+        links.push(*find_links(v)) if v.is_a?(Array) || v.is_a?(Hash)
+      end
+    end
+
+    return links
   end
 
   # return Hash

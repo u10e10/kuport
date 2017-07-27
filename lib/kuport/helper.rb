@@ -79,6 +79,14 @@ class Kuport
       end
     end
 
+    refine Hash do
+      def take_with_keys(*keys)
+        ret = {}
+        keys.each{|k| ret[k] = self.delete(k) if self.key?(k)}
+        return ret.empty? ? nil : ret
+      end
+    end
+
     refine Nokogiri::XML::Node do
       def br_to_return
         self.search('br').each{|br| br.replace("\n")}

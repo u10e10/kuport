@@ -104,11 +104,10 @@ parser.permute!(ARGV)
 opts = parser.options
 
 # read config
-config = {}
 if File.readable?(RC_FILE)
-  config = JSON.parse(File.read(RC_FILE), {symbolize_names: true})
+  JSON.parse(File.read(RC_FILE), {symbolize_names: true})
+    .each{|k,v| opts[k] = config[k] unless opts.has_key?(k)}
 end
-config.each{|k,v| opts[k] = config[k] unless opts.has_key?(k)}
 
 if debug?
   warn "opts #{opts}"

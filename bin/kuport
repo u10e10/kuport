@@ -5,37 +5,36 @@ require 'json'
 
 using Kuport::ClassExtensions
 
-# ruby2.3 <<~DOC
-example_usage = <<USAGE
-example usage
+example_usage = <<~USAGE
+  Example usage
 
-# Get messages
-kuport --id=jx91234 -m
-
-
-# Get already read messages
-kuport --id=jx91234 -m read
+  # Get messages
+  kuport --id=jx91234 -m
 
 
-# Login only(cache cookies)
-kuport --id=jx91234
+  # Get already read messages
+  kuport --id=jx91234 -m read
 
 
-# Download URL as NAME
-kuport --download=NAME:URL
+  # Login only(cache cookies)
+  kuport --id=jx91234
 
 
-# Download message attachment
-json="$(kuport --id jx91234 -m | jq '.[0].links')"
-kuport --download="$json"
+  # Download URL as NAME
+  kuport --download=NAME:URL
 
 
-# Interactively download message attachment
-go get github.com/simeji/jid/cmd/jid
-kuport --download="$(kuport --id jx91234 -m | jid)"
+  # Download message attachment
+  json="$(kuport --id jx91234 -m | jq '.[0].links')"
+  kuport --download="$json"
 
-# Download specific subjects materials
-kuport --materials | kuport --filter='subject:Computer' | kuport --download
+
+  # Interactively download message attachment
+  go get github.com/simeji/jid/cmd/jid
+  kuport --download="$(kuport --id jx91234 -m | jid)"
+
+  # Download specific subjects materials
+  kuport --materials | kuport --filter='subject:Computer' | kuport --download
 USAGE
 
 def debug?
@@ -96,6 +95,7 @@ parser = OptionParser.new do |o|
   o.separator('')
 
   o.separator('')
+  o.separator('------------------------------------------------------------')
   o.on_tail(example_usage)
 end
 
@@ -105,8 +105,8 @@ opts = parser.options
 
 # read config
 if File.readable?(RC_FILE)
-  JSON.parse(File.read(RC_FILE), {symbolize_names: true})
-    .each{|k,v| opts[k] = config[k] unless opts.has_key?(k)}
+  config = JSON.parse(File.read(RC_FILE), { symbolize_names: true })
+  opts.merge!(config) {|key, old, new| old }
 end
 
 if debug?
